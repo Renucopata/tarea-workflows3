@@ -1,0 +1,45 @@
+name: TareaCI/CD
+
+on:
+  schedule:
+    - cron: '45 15 * * MON'  # Run every Monday at 15:45 (UTC)
+
+  push:
+    branches:
+      - 'feature/*'
+      - 'release/*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build the React app
+        run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Production
+        run: |
+          if [[ $GITHUB_REF == refs/heads/release/* ]]; then
+            echo "Deploying to production..."
+            # Add deployment steps here
+          fi
